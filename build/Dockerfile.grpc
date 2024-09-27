@@ -1,0 +1,32 @@
+# Use the official Golang image to create a build artifact.
+FROM golang:1.23 as builder
+
+# Set the Current Working Directory inside the container
+RUN mkdir -p /src/paytment
+WORKDIR /src/paytment
+
+# Copy go mod and sum files
+COPY ./go.mod ./go.mod
+COPY ./go.sum ./go.sum
+COPY ./service ./service
+COPY ./pb ./pb
+
+# Download all dependencies. Dependencies will be cached if the go.mod and go.sum files are not changed
+RUN go mod download
+
+# Build the Go app
+RUN go build -o grpc-service service/grpc/service.go
+
+# Start a new stage from scratch
+FROM alpine:latest
+
+WORKDIR /appl
+
+# Copy the Pre-built binary file from the previous stage
+COPY --from=builder /src/payment/grpc-service /appl/
+
+# Expose port 50051 to the outside world
+EXPOSE 50051
+
+# Command to run the executable
+CMD ["./grpc-service"]
