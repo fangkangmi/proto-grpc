@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package payment;
+
+option go_package = "/payment";
+
+// Payment service definition
+service PaymentService {
+    // Sends a payment
+    rpc MakePayment (PaymentRequest) returns (PaymentResponse);
+    // Retrieves payment status
+    rpc GetPaymentStatus (PaymentStatusRequest) returns (PaymentStatusResponse);
+}
+
+// The request message containing the payment details
+message PaymentRequest {
+    string user_id = 1;
+    double amount = 2;
+    string currency = 3;
+    string payment_method = 4; // e.g., credit_card, paypal
+    string description = 5; // e.g., payment for order #1234
+    string recipient_id = 6; // ID of the payment recipient
+}
+
+// The response message containing the payment result
+message PaymentResponse {
+    bool success = 1;
+    string transaction_id = 2;
+    string message = 3;
+    string timestamp = 4; // Time of the transaction
+    double fee = 5; // Transaction fee
+}
+
+// The request message for retrieving payment status
+message PaymentStatusRequest {
+    string transaction_id = 1;
+}
+
+// The response message containing the payment status
+message PaymentStatusResponse {
+    string transaction_id = 1;
+    string status = 2; // e.g., pending, completed, failed
+    string message = 3;
+    string timestamp = 4; // Time of the status update
+}
