@@ -15,7 +15,7 @@ COPY ./pb ./pb
 RUN go mod download
 
 # Build the Go app
-RUN go build -o grpc-service service/grpc/service.go
+RUN go build -o rest-service service/rest/service.go
 
 # Start a new stage from scratch
 FROM alpine:latest
@@ -23,10 +23,10 @@ FROM alpine:latest
 WORKDIR /appl
 
 # Copy the Pre-built binary file from the previous stage
-COPY --from=builder /src/payment/grpc-service /appl/
+COPY --from=builder /src/payment/rest-service /appl/
 
-# Expose port 50051 to the outside world
-EXPOSE 50051
+# Expose port 8081 to the outside world
+EXPOSE 8081
 
 # Command to run the executable
-CMD ["./grpc-service"]
+CMD ["./rest-service"]

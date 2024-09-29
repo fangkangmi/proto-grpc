@@ -64,7 +64,7 @@ func main() {
 }
 
 func makePayment(req PaymentRequest) (*PaymentResponse, error) {
-	url := "http://localhost:8080/make_payment"
+	url := "http://localhost:8081/make_payment"
 	jsonReq, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
@@ -85,7 +85,7 @@ func makePayment(req PaymentRequest) (*PaymentResponse, error) {
 }
 
 func getPaymentStatus(req PaymentStatusRequest) (*PaymentStatusResponse, error) {
-	url := "http://localhost:8080/get_payment_status"
+	url := "http://localhost:8081/get_payment_status"
 	jsonReq, err := json.Marshal(req)
 	if err != nil {
 		return nil, err

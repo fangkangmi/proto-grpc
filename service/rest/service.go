@@ -44,7 +44,8 @@ var (
 func main() {
 	http.HandleFunc("/make_payment", makePaymentHandler)
 	http.HandleFunc("/get_payment_status", getPaymentStatusHandler)
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	log.Println("Starting server on :8081")
+	log.Fatal(http.ListenAndServe(":8081", nil))
 }
 
 func makePaymentHandler(w http.ResponseWriter, r *http.Request) {
