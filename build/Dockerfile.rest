@@ -18,7 +18,7 @@ RUN go mod download
 RUN go build -o rest-service service/rest/service.go
 
 # Start a new stage from scratch
-FROM alpine:latest
+FROM registry.access.redhat.com/ubi9/ubi-minimal
 
 WORKDIR /appl
 

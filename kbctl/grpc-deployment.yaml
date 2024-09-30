@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: grpc-payment-service
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: grpc-payment-service
+  template:
+    metadata:
+      labels:
+        app: grpc-payment-service
+    spec:
+      containers:
+      - name: grpc-payment-service
+        image: gcr.io/{PROJECT_ID}/grpc-payment-service:v1
+        ports:
+        - containerPort: 50051
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "500m"
+          limits:
+            memory: "512Mi"
+            cpu: "1"

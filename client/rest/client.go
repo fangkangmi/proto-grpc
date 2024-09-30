@@ -6,7 +6,10 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 	"time"
+
+	"github.com/joho/godotenv"
 )
 
 type PaymentRequest struct {
@@ -35,6 +38,13 @@ type PaymentStatusResponse struct {
 	Status        string `json:"status"`
 	Message       string `json:"message"`
 	Timestamp     string `json:"timestamp"`
+}
+
+func init() {
+	// Load environment variables from .env file
+	if err := godotenv.Load("grpc_proto.env"); err != nil {
+		log.Fatalf("Error loading .env file")
+	}
 }
 
 func main() {
@@ -82,13 +92,17 @@ func main() {
 }
 
 func makePayment(req PaymentRequest) (*PaymentResponse, error) {
-	url := "http://35.233.28.207/make_payment"
+	url := os.Getenv("REST_URL")
 	jsonReq, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonReq))
+	client := &http.Client{
+		Timeout: 1 * time.Second,
+	}
+
+	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonReq))
 	if err != nil {
 		return nil, err
 	}
@@ -103,13 +117,17 @@ func makePayment(req PaymentRequest) (*PaymentResponse, error) {
 }
 
 func getPaymentStatus(req PaymentStatusRequest) (*PaymentStatusResponse, error) {
-	url := "http://35.233.28.207/get_payment_status"
+	url := os.Getenv("PAYMENT_STATUS_URL")
 	jsonReq, err := json.Marshal(req)
 	if err != nil {
 		return nil, err
 	}
 
-	resp, err := http.Post(url, "application/json", bytes.NewBuffer(jsonReq))
+	client := &http.Client{
+		Timeout: 1 * time.Second,
+	}
+
+	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonReq))
 	if err != nil {
 		return nil, err
 	}

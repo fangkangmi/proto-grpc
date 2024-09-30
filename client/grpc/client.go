@@ -3,17 +3,26 @@ package main
 import (
 	"context"
 	"log"
+	"os"
 	"time"
 
 	pb "grpc/pb/gen/payment"
 
+	"github.com/joho/godotenv"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
+func init() {
+	// Load environment variables from .env file
+	if err := godotenv.Load("grpc_proto.env"); err != nil {
+		log.Fatalf("Error loading .env file")
+	}
+}
+
 func main() {
 	// Set up a connection to the server.
-	conn, err := grpc.NewClient("34.38.55.203:80", grpc.WithTransportCredentials((insecure.NewCredentials())))
+	conn, err := grpc.NewClient(os.Getenv("GRPC_URL"), grpc.WithTransportCredentials((insecure.NewCredentials())))
 	if err != nil {
 		log.Fatalf("did not connect: %v", err)
 	}
