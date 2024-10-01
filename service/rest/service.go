@@ -42,10 +42,19 @@ var (
 )
 
 func main() {
-	http.HandleFunc("/make_payment", makePaymentHandler)
-	http.HandleFunc("/get_payment_status", getPaymentStatusHandler)
+	mux := http.NewServeMux()
+	mux.HandleFunc("/make_payment", makePaymentHandler)
+	mux.HandleFunc("/get_payment_status", getPaymentStatusHandler)
+
+	server := &http.Server{
+		Addr:         ":8081",
+		Handler:      mux,
+		ReadTimeout:  5 * time.Second,
+		WriteTimeout: 10 * time.Second,
+	}
+
 	log.Println("Starting server on :8081")
-	log.Fatal(http.ListenAndServe(":8081", nil))
+	log.Fatal(server.ListenAndServe())
 }
 
 func makePaymentHandler(w http.ResponseWriter, r *http.Request) {
